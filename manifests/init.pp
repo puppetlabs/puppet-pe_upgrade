@@ -66,9 +66,6 @@ class pe_upgrade(
   if $version == $::pe_version {
     # This conditional is added to reduce the catalog size after the upgrade
     # has been performed.
-    notify { 'pe-upgrade status':
-      message => "Puppet Enterprise at desired version: ${version}",
-    }
   }
   else {
     require staging
