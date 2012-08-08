@@ -72,6 +72,21 @@ doesn't directly support parameterized classes, you can use global variables
 to configure the module. See the data.pp class documentation for all respected
 variables.
 
+### Puppet Dashboard will show errors on pe_upgrade runs
+
+The PE Upgrader restarts the puppet service as part of the upgrade process. This 
+results in a TERM signal being sent to the puppet process executing the pe_upgrade
+module. This will look something like this:
+
+    notice executed successfully	/Stage[main]/Pe_upgrade/Staging::File[puppet-enterprise-2.5.3-all.tar.gz]/Exec[/opt/staging/pe_upgrade/puppet-enterprise-2.5.3-all.tar.gz]/returns	/etc/puppetlabs/puppet/modules/staging/manifests/file.pp	83	2012-08-08 20:29 UTC
+    notice	executed successfully	/Stage[main]/Pe_upgrade/Staging::Extract[puppet-enterprise-2.5.3-all.tar.gz]/Exec[extract puppet-enterprise-2.5.3-all.tar.gz]/returns	/etc/puppetlabs/puppet/modules/staging/manifests/extract.pp	116	2012-08-08 20:30 UTC
+    notice	executed successfully	/Stage[main]/Pe_upgrade/Exec[Validate answers]/returns	/etc/puppetlabs/puppet/modules/pe_upgrade/manifests/init.pp	137	2012-08-08 20:30 UTC
+    notice	Caught TERM; calling stop	Puppet			2012-08-08 20:30 UTC
+
+The _"failure"_ is expected and is not really a failure. Restarting the puppet service
+can also leave unexecuted changes for the next run. So a _"full"_ upgrade may take two 
+puppet runs.
+
 Answers Templates
 -----------------
 
