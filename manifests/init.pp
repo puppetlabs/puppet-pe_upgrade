@@ -63,94 +63,96 @@ class pe_upgrade(
   $timeout      = $pe_upgrade::data::timeout
 ) inherits pe_upgrade::data {
 
-  if $version == $::pe_version {
-    # This conditional is added to reduce the catalog size after the upgrade
-    # has been performed.
-  }
-  else {
-    require staging
+  if ! $::fact_is_puppetmaster {
+    if $version == $::pe_version {
+      # This conditional is added to reduce the catalog size after the upgrade
+      # has been performed.
+    }
+    else {
+      require staging
 
-    ############################################################################
-    # Munge variables
-    ############################################################################
+      ############################################################################
+      # Munge variables
+      ############################################################################
 
-    $installer_tar = "puppet-enterprise-${version}-all.tar.gz"
-    $installer_dir = "puppet-enterprise-${version}-all"
+      $installer_tar = "puppet-enterprise-${version}-all.tar.gz"
+      $installer_dir = "puppet-enterprise-${version}-all"
 
-    $source_url = "${download_dir}/${installer_tar}"
+      $source_url = "${download_dir}/${installer_tar}"
 
-    $upgrader = "${staging::path}/pe_upgrade/${installer_dir}/puppet-enterprise-upgrader"
+      $upgrader = "${staging::path}/pe_upgrade/${installer_dir}/puppet-enterprise-upgrader"
 
-    $answersfile_dest = "${staging::path}/pe_upgrade/answers.txt"
+      $answersfile_dest = "${staging::path}/pe_upgrade/answers.txt"
 
-    ############################################################################
-    # Stage the installer and answers file
-    ############################################################################
+      ############################################################################
+      # Stage the installer and answers file
+      ############################################################################
 
-    if $checksum {
-      # Remove failed staging attempts. Nominally this should be in
-      # the staging module.
-      exec { "rm ${installer_tar}":
-        path   => "/usr/bin:/bin",
-        onlyif => "test `md5sum ${installer_tar}` != ${checksum}",
-        before => Staging::File[$installer_tar],
+      if $checksum {
+        # Remove failed staging attempts. Nominally this should be in
+        # the staging module.
+        exec { "rm ${installer_tar}":
+          path   => "/usr/bin:/bin",
+          onlyif => "test `md5sum ${installer_tar}` != ${checksum}",
+          before => Staging::File[$installer_tar],
+        }
       }
-    }
 
-    staging::file { $installer_tar:
-      source  => $source_url,
-      timeout => $timeout,
-    }
+      staging::file { $installer_tar:
+        source  => $source_url,
+        timeout => $timeout,
+      }
 
-    staging::extract { $installer_tar:
-      target  => "${staging::path}/pe_upgrade",
-      require => Staging::File[$installer_tar],
-    }
+      staging::extract { $installer_tar:
+        target  => "${staging::path}/pe_upgrade",
+        require => Staging::File[$installer_tar],
+      }
 
-    file { $answersfile_dest:
-      ensure  => present,
-      content => template($answersfile),
-      owner   => 0,
-      group   => 0,
-      require => File["${staging::path}/pe_upgrade"],
-    }
+      file { $answersfile_dest:
+        ensure  => present,
+        content => template($answersfile),
+        owner   => 0,
+        group   => 0,
+        require => File["${staging::path}/pe_upgrade"],
+      }
 
-    ############################################################################
-    # Validate and perform upgrade
-    ############################################################################
+      ############################################################################
+      # Validate and perform upgrade
+      ############################################################################
 
-    exec { 'Validate answers':
-      command   => "${upgrader} -n -a ${answersfile_dest}",
-      path      => [
-        '/usr/bin',
-        '/bin',
-        '/usr/local/bin',
-        '/usr/sbin',
-        '/sbin',
-        '/usr/local/sbin'
-      ],
-      user      => 0,
-      group     => 0,
-      logoutput => on_failure,
-      timeout   => $timeout,
-      require   => Staging::Extract[$installer_tar],
-    }
+      exec { 'Validate answers':
+        command   => "${upgrader} -n -a ${answersfile_dest}",
+        path      => [
+          '/usr/bin',
+          '/bin',
+          '/usr/local/bin',
+          '/usr/sbin',
+          '/sbin',
+          '/usr/local/sbin'
+        ],
+        user      => 0,
+        group     => 0,
+        logoutput => on_failure,
+        timeout   => $timeout,
+        require   => Staging::Extract[$installer_tar],
+      }
 
-    exec { 'Run upgrade':
-      command   => "${upgrader} -a ${answersfile_dest}",
-      path      => [
-        '/usr/bin',
-        '/bin',
-        '/usr/local/bin',
-        '/usr/sbin',
-        '/sbin',
-        '/usr/local/sbin'
-      ],
-      user      => 0,
-      group     => 0,
-      logoutput => on_failure,
-      timeout   => $timeout,
-      require   => Exec['Validate answers'],
+      exec { 'Run upgrade':
+        command   => "${upgrader} -a ${answersfile_dest}",
+        path      => [
+          '/usr/bin',
+          '/bin',
+          '/usr/local/bin',
+          '/usr/sbin',
+          '/sbin',
+          '/usr/local/sbin'
+        ],
+        user      => 0,
+        group     => 0,
+        logoutput => on_failure,
+        timeout   => $timeout,
+        require   => Exec['Validate answers'],
+      }
     }
   }
 }
