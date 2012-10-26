@@ -60,7 +60,10 @@ class pe_upgrade(
   $version      = $pe_upgrade::data::version,
   $answersfile  = $pe_upgrade::data::answersfile,
   $checksum     = $pe_upgrade::data::checksum,
-  $timeout      = $pe_upgrade::data::timeout
+  $timeout      = $pe_upgrade::data::timeout,
+  $mode         = $pe_upgrade::data::mode,
+  $server       = $pe_upgrade::data::server,
+  $certname     = $pe_upgrade::data::certname
 ) inherits pe_upgrade::data {
 
   if ! $::fact_is_puppetmaster {
@@ -80,7 +83,11 @@ class pe_upgrade(
 
       $source_url = "${download_dir}/${installer_tar}"
 
-      $upgrader = "${staging::path}/pe_upgrade/${installer_dir}/puppet-enterprise-upgrader"
+      if $mode == 'install' {
+        $execute = "${staging::path}/pe_upgrade/${installer_dir}/puppet-enterprise-installer"
+      } else {
+        $execute = "${staging::path}/pe_upgrade/${installer_dir}/puppet-enterprise-upgrader"
+      }
 
       $answersfile_dest = "${staging::path}/pe_upgrade/answers.txt"
 
@@ -121,7 +128,7 @@ class pe_upgrade(
       ############################################################################
 
       exec { 'Validate answers':
-        command   => "${upgrader} -n -a ${answersfile_dest}",
+        command   => "${execute} -n -a ${answersfile_dest}",
         path      => [
           '/usr/bin',
           '/bin',
@@ -138,7 +145,7 @@ class pe_upgrade(
       }
 
       exec { 'Run upgrade':
-        command   => "${upgrader} -a ${answersfile_dest}",
+        command   => "${execute} -a ${answersfile_dest}",
         path      => [
           '/usr/bin',
           '/bin',
@@ -152,6 +159,18 @@ class pe_upgrade(
         logoutput => on_failure,
         timeout   => $timeout,
         require   => Exec['Validate answers'],
+      }
+
+      ############################################################################
+      # If running in install mode, then shut down Puppet Open Source after install
+      # Don't actually remove it. Let the user define that strategy
+      ############################################################################
+      if $mode == 'install' {
+        service { 'puppet':
+          ensure  => stopped,
+          enable  => false,
+          require => Exec['Run upgrade'],
+        }
       }
     }
   }

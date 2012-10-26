@@ -78,4 +78,13 @@ class pe_upgrade::data {
 
   if $::pe_upgrade_timeout { $timeout = $::pe_upgrade_timeout }
   else { $timeout = '3600' }
+
+  if $::pe_upgrade_mode { $mode = $::pe_upgrade_mode }
+  else { $mode = 'upgrade' }
+
+  if $::pe_upgrade_server { $server = $::pe_upgrade_server }
+  else { $server = $::servername }
+
+  if $::pe_upgrade_certname { $server = $::pe_upgrade_certname }
+  else { $certname = $::clientcert }
 }
