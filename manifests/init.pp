@@ -85,12 +85,23 @@ class pe_upgrade(
   $logfile         = $pe_upgrade::data::logfile,
 ) inherits pe_upgrade::data {
 
+  include "::staging"
+  $staging_root = "${::staging::path}/pe_upgrade"
+
   if $::pe_version == $version {
     if $verbose {
       notify { "Upgrade status":
         loglevel => info,
         message  => "Current PE version '${pe_version}' at desired version '${version}'; not managing upgrade resources",
       }
+    }
+
+    # When versions match we can safely purge the PE downloads
+    file {$staging_root:
+      force   => true,
+      recurse => true,
+      purge   => true,
+      backup  => false,
     }
   }
   else {
@@ -100,9 +111,6 @@ class pe_upgrade(
 
     $installer_dir = pe_pkgname($version)
     $installer_tar = "${installer_dir}.tar.gz"
-
-    include "::staging"
-    $staging_root = "${::staging::path}/pe_upgrade"
 
     anchor { 'pe_upgrade::begin': } ->
     class { 'pe_upgrade::validation':
