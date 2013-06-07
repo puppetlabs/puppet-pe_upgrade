@@ -103,6 +103,13 @@
 # * global variable: pe_upgrade_logfile
 # * default value: false
 #
+# === [*mco_agent_dir*]
+#
+# If specified, installs the MCollective agent into the specified dir.
+#
+# * global variable: pe_upgrade_mco_agent_dir
+# * default value: '/opt/puppet/libexec/mcollective/mcollective/agent'
+#
 # == Authors
 #
 # Adrien Thebo <adrien@puppetlabs.com>
@@ -162,6 +169,9 @@ class pe_upgrade::data {
 
   if $::pe_upgrade_logfile { $logfile = $::pe_upgrade_logfile }
   else { $logfile = false }
+
+  if $::pe_upgrade_mco_agent_dir { $mco_agent_dir = $::pe_upgrade_mco_agent_dir }
+  else { $mco_agent_dir = '/opt/puppet/libexec/mcollective/mcollective/agent' }
 
   if $::pe_upgrade_migrate_certs { $migrate_certs = $::pe_upgrade_migrate_certs }
   else { $migrate_certs = false }
