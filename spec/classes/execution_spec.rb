@@ -29,16 +29,6 @@ describe 'pe_upgrade::execution', :type => :class do
     end
 
     it do
-      should contain_exec('Validate answers').with({
-        'command'   => /#{Regexp.new(installer)}.*puppet-enterprise-upgrader.*-n/,
-        'user'      => '0',
-        'group'     => '0',
-        'logoutput' => 'on_failure',
-        'timeout'   => '300',
-      })
-    end
-
-    it do
       should contain_exec('Run upgrade').with({
         'command'   => /#{Regexp.new(installer)}.*puppet-enterprise-upgrader/,
         'user'      => '0',

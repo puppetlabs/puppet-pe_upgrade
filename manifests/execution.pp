@@ -41,15 +41,15 @@ class pe_upgrade::execution(
     group   => 0,
   }
 
-  exec { 'Validate answers':
-    command   => $validate_cmd,
-    path      => $exec_paths,
-    user      => 0,
-    group     => 0,
-    logoutput => on_failure,
-    timeout   => $timeout,
-    require   => File[$answersfile_dest],
-  }
+  #exec { 'Validate answers':
+  #  command   => $validate_cmd,
+  #  path      => $exec_paths,
+  #  user      => 0,
+  #  group     => 0,
+  #  logoutput => on_failure,
+  #  timeout   => $timeout,
+  #  require   => File[$answersfile_dest],
+  #}
 
   exec { 'Run upgrade':
     command   => $run_cmd,
@@ -58,7 +58,6 @@ class pe_upgrade::execution(
     group     => 0,
     logoutput => on_failure,
     timeout   => $timeout,
-    require   => Exec['Validate answers'],
   }
 
   ############################################################################
