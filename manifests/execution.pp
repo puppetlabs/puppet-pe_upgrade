@@ -9,10 +9,7 @@ class pe_upgrade::execution(
   $timeout,
 ) {
 
-  $bin = $mode ? {
-    'install' => 'puppet-enterprise-installer',
-    default   => 'puppet-enterprise-upgrader',
-  }
+  $bin = 'puppet-enterprise-installer'
 
   if $logfile { $log_directive = "-l ${logfile}" }
   else        { $log_directive = "" }
@@ -34,7 +31,7 @@ class pe_upgrade::execution(
 
   file { $answersfile_dest:
     ensure  => present,
-    content => template($answersfile),
+    content => template($pe_upgrade::data::answersfile),
     owner   => 0,
     group   => 0,
   }

@@ -3,6 +3,23 @@ Puppet Enterprise Upgrade Module
 
 This module will upgrade Puppet Enterprise.
 
+Required modules
+----------------
+
+You will need hiera installed to use this module. Hiera has been added to PE
+as of version 2.5.0; so you can upgrade your master to get it. If this isn't
+an option, you can use the [puppet-hiera][puppet-hiera] module. You'll also
+need a functioning hiera installation for this to work; you can use the
+aforementioned hiera module to set up a basic configuration.
+
+[puppet-hiera]: https://github.com/nanliu/puppet-hiera "Puppet module to install hiera"
+
+The puppet-staging module is a prerequisite for this module. You can find it at
+the following locations:
+
+  * Puppet Forge: http://forge.puppetlabs.com/nanliu/staging
+  * Github: https://github.com/nanliu/puppet-hiera
+
 Usage
 -----
 
@@ -21,15 +38,17 @@ deployment time.
 ### Hosting the installer on the master
 
 To cut down on size, the Puppet Enterprise installer is not included. You will
-need to download your operating system specific installers and place the
-installers in ${modulename}/files, for instance `site-files/files`.
+need to download 'puppet-enterprise-${version}-all.tar.gz' and place it in
+'pe/files'.
 
-You can use the following class definition to download the installer from your Puppet Master.
+You can use the following class definition to pull the download from the
+Puppet Labs download server.
+
 
     class { 'pe_upgrade':
-      version      => '2.7.0',
+      version      => '2.5.0',
       answersfile  => "pe/answers/agent.txt.erb",
-      download_dir => 'puppet:///site-files/pe/2.7.0',
+      download_dir => 'puppet:///site-files/pe/2.0.3',
       timeout      => '3600',
     }
 
@@ -41,7 +60,7 @@ it on your webserver.
     class { 'pe_upgrade':
       version      => '2.5.0',
       answersfile  => "pe/answers/agent.txt.erb",
-      download_dir => 'http://site.downloads.local/pe/2.7.0',
+      download_dir => 'http://site.downloads.local/pe/2.0.3',
       timeout      => '3600',
     }
 
@@ -77,37 +96,17 @@ hiera for you, and since 2.5.0 has some new very site specific questions due
 to the console auth component, it's not really possible to provide a generic
 answers file.
 
-Required modules
-----------------
-
-You will need hiera installed to use this module. Hiera has been added to PE
-as of version 2.5.0; so you can upgrade your master to get it. If this isn't
-an option, you can use the [puppet-hiera][puppet-hiera] module. You'll also
-need a functioning hiera installation for this to work; you can use the
-aforementioned hiera module to set up a basic configuration.
-
-[puppet-hiera]: https://github.com/nanliu/puppet-hiera "Puppet module to install hiera"
-
-The puppet-staging module is a prerequisite for this module. You can find it at
-the following locations:
-
-  * Puppet Forge: http://forge.puppetlabs.com/nanliu/staging
-  * Github: https://github.com/nanliu/puppet-hiera
-
 See Also
 --------
 
 Please view the documentation in the enclosed manifests specific descriptions
 and usage.
 
-Getting Help
-------------
-
-If you have questions or concerns about this module, contact finch on #puppet
-on Freenode, or email adrien@puppetlabs.com.
-
 Caveats
 -------
+
+This module needs to download the universal installer on every node; this will
+be fixed in later releases.
 
 Due to the complexity of upgrading masters, using this module to upgrade a
 master is possible but not supported out of the box; you'll have to supply
