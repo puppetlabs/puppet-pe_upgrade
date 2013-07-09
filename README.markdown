@@ -46,9 +46,9 @@ Puppet Labs download server.
 
 
     class { 'pe_upgrade':
-      version      => '2.5.0',
+      version      => '3.0.0',
       answersfile  => "pe/answers/agent.txt.erb",
-      download_dir => 'puppet:///site-files/pe/2.0.3',
+      download_dir => 'puppet:///site-files/pe/3.0.0',
       timeout      => '3600',
     }
 
@@ -58,9 +58,9 @@ In this example, download 'puppet-enterprise-${version}-all.tar.gz' and place
 it on your webserver.
 
     class { 'pe_upgrade':
-      version      => '2.5.0',
+      version      => '3.0.0',
       answersfile  => "pe/answers/agent.txt.erb",
-      download_dir => 'http://site.downloads.local/pe/2.0.3',
+      download_dir => 'http://site.downloads.local/pe/3.0.0',
       timeout      => '3600',
     }
 
