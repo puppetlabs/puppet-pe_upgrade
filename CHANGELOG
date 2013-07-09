@@ -1,23 +1,33 @@
 CHANGELOG
 =========
 
-0.4.2
------
+-0.5.0
+------
+-
+-2013-07-09
+-
+-Release for upgrading to PE 3.0
+- Not backwards compatible
+-
 
-2013-04-05
-
-This is a backwards compatible bugfix release.
-
-  * (pe_upgrade-#17) ACTUALLY correct module permissions in published module.
-
-0.4.1
------
-
-2013-04-05
-
-This is a backwards compatible bugfix release.
-
-  * (pe_upgrade-#17) Correct module permissions in published module
+-0.4.2
+------
+-
+-2013-04-05
+-
+-This is a backwards compatible bugfix release.
+-
+-  * (pe_upgrade-#17) ACTUALLY correct module permissions in published module.
+-
+-0.4.1
+------
+-
+-2013-04-05
+-
+-This is a backwards compatible bugfix release.
+-
+-  * (pe_upgrade-#17) Correct module permissions in published module
+-
 
 0.4.0
 -----

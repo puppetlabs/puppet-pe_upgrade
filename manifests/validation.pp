@@ -16,7 +16,7 @@ class pe_upgrade::validation(
   }
 
   # Perform version validation
-  $ver_split = split($version, '\.')
+  $ver_split = split($pe_upgrade::version, '\.')
   $desired_major_version = $ver_split[0]
   $desired_minor_version = $ver_split[1]
   $desired_patch_version = $ver_split[2]
@@ -25,7 +25,7 @@ class pe_upgrade::validation(
   # decisions and trust they understand the implication of their actions.
   if $pe_version and ! $allow_downgrade {
     $errmsg = "Refusing to downgrade from ${::pe_version} to ${version} without 'force_upgrade' set"
-    if $desired_major_version < $pe_major_version {
+    if $desired_major_version < $::pe_major_version {
       # If requested major version is less than the current major version,
       # fail
       fail($errmsg)
