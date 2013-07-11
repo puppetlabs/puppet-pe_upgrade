@@ -92,7 +92,7 @@ The puppet-staging module is a prerequisite for this module. You can find it at
 the following locations:
 
   * Puppet Forge: http://forge.puppetlabs.com/nanliu/staging
-  * Github: https://github.com/nanliu/puppet-hiera
+  * Github: https://github.com/nanliu/puppet-staging
 
 See Also
 --------
