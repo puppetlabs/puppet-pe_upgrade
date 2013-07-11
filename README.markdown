@@ -80,14 +80,6 @@ answers file.
 Required modules
 ----------------
 
-You will need hiera installed to use this module. Hiera has been added to PE
-as of version 2.5.0; so you can upgrade your master to get it. If this isn't
-an option, you can use the [puppet-hiera][puppet-hiera] module. You'll also
-need a functioning hiera installation for this to work; you can use the
-aforementioned hiera module to set up a basic configuration.
-
-[puppet-hiera]: https://github.com/nanliu/puppet-hiera "Puppet module to install hiera"
-
 The puppet-staging module is a prerequisite for this module. You can find it at
 the following locations:
 
