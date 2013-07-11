@@ -5,7 +5,7 @@
 # == Parameters
 #
 # If a parameter is not specified, it will default to the value in
-# pe_upgrade::data. See that class for values
+# pe_upgrade::params. See that class for values
 #
 # [*version*]
 #
@@ -70,47 +70,43 @@
 # limitations under the License.
 #
 class pe_upgrade(
-  $download_dir    = $pe_upgrade::data::download_dir,
-  $version         = $pe_upgrade::data::version,
-  $answersfile     = $pe_upgrade::data::answersfile,
-  $checksum        = $pe_upgrade::data::checksum,
-  $timeout         = $pe_upgrade::data::timeout,
-  $mode            = $pe_upgrade::data::mode,
-  $migrate_certs   = $pe_upgrade::data::migrate_certs,
-  $server          = $pe_upgrade::data::server,
-  $certname        = $pe_upgrade::data::certname,
-  $allow_downgrade = $pe_upgrade::data::allow_downgrade,
-  $upgrade_master  = $pe_upgrade::data::upgrade_master,
-  $verbose         = $pe_upgrade::data::verbose,
-  $logfile         = $pe_upgrade::data::logfile,
-) inherits pe_upgrade::data {
+  $download_dir    = $pe_upgrade::params::download_dir,
+  $version         = $pe_upgrade::params::version,
+  $answersfile     = $pe_upgrade::params::answersfile,
+  $checksum        = $pe_upgrade::params::checksum,
+  $timeout         = $pe_upgrade::params::timeout,
+  $mode            = $pe_upgrade::params::mode,
+  $migrate_certs   = $pe_upgrade::params::migrate_certs,
+  $server          = $pe_upgrade::params::server,
+  $certname        = $pe_upgrade::params::certname,
+  $allow_downgrade = $pe_upgrade::params::allow_downgrade,
+  $upgrade_master  = $pe_upgrade::params::upgrade_master,
+  $verbose         = $pe_upgrade::params::verbose,
+  $logfile         = $pe_upgrade::params::logfile,
+) inherits pe_upgrade::params {
 
   include "::staging"
   $staging_root = "${::staging::path}/pe_upgrade"
 
   if $::pe_version == $version {
+    # When versions match we can safely purge the PE downloads
+    file { $staging_root:
+      force   => true,
+      recurse => true,
+      purge   => true,
+      backup  => false,
+    }
+
     if $verbose {
       notify { "Upgrade status":
         loglevel => info,
         message  => "Current PE version '${pe_version}' at desired version '${version}'; not managing upgrade resources",
       }
     }
-
-    # When versions match we can safely purge the PE downloads
-    file {$staging_root:
-      force   => true,
-      recurse => true,
-      purge   => true,
-      backup  => false,
-    }
   }
   else {
 
-    # ---------------
-    # Munge variables
-
-    $installer_dir = pe_pkgname($version)
-    $installer_tar = "${installer_dir}.tar.gz"
+    $installer = $::pe_upgrade_installer
 
     anchor { 'pe_upgrade::begin': } ->
     class { 'pe_upgrade::validation':
@@ -118,16 +114,24 @@ class pe_upgrade(
       upgrade_master  => $upgrade_master,
       allow_downgrade => $allow_downgrade,
     } ->
-    class { 'pe_upgrade::staging':   timeout => $timeout } ->
+    class { 'pe_upgrade::staging':
+      version      => $version,
+      installer    => $installer,
+      download_dir => $download_dir,
+      staging_root => $staging_root,
+      timeout      => $timeout,
+    } ->
     class { 'pe_upgrade::execution':
+      version      => $version,
       mode          => $mode,
       migrate_certs => $migrate_certs,
       staging_root  => $staging_root,
-      installer_dir => $installer_dir,
+      installer     => $installer,
       timeout       => $timeout,
       logfile       => $logfile,
       certname      => $certname,
       server        => $server,
+      answersfile   => $answersfile,
     } ->
     anchor { 'pe_upgrade::end': }
   }

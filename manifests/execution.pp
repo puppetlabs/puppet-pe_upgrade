@@ -1,12 +1,14 @@
 class pe_upgrade::execution(
   $certname,
-  $installer_dir,
+  $installer,
+  $version,
   $logfile,
   $mode,
   $migrate_certs,
   $server,
   $staging_root,
   $timeout,
+  $answersfile,
 ) {
 
   $bin = $mode ? {
@@ -19,7 +21,7 @@ class pe_upgrade::execution(
 
   $answersfile_dest = "${staging_root}/answers.txt"
 
-  $cmd = "${staging_root}/${installer_dir}/${bin}"
+  $cmd = regsubst("${staging_root}/${installer}/${bin}", ':version', $version, 'G')
   $validate_cmd = "${cmd} -n -a ${answersfile_dest}"
   $run_cmd      = "${cmd} ${log_directive} -a ${answersfile_dest}"
 
@@ -39,15 +41,15 @@ class pe_upgrade::execution(
     group   => 0,
   }
 
-  exec { 'Validate answers':
-    command   => $validate_cmd,
-    path      => $exec_paths,
-    user      => 0,
-    group     => 0,
-    logoutput => on_failure,
-    timeout   => $timeout,
-    require   => File[$answersfile_dest],
-  }
+  #exec { 'Validate answers':
+  #  command   => $validate_cmd,
+  #  path      => $exec_paths,
+  #  user      => 0,
+  #  group     => 0,
+  #  logoutput => on_failure,
+  #  timeout   => $timeout,
+  #  require   => File[$answersfile_dest],
+  #}
 
   exec { 'Run upgrade':
     command   => $run_cmd,
@@ -56,7 +58,6 @@ class pe_upgrade::execution(
     group     => 0,
     logoutput => on_failure,
     timeout   => $timeout,
-    require   => Exec['Validate answers'],
   }
 
   ############################################################################
