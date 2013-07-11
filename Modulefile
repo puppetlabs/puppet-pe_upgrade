@@ -9,3 +9,4 @@ source       'https://github.com/adrienthebo/puppet-pe_upgrade'
 project_page 'https://github.com/adrienthebo/puppet-pe_upgrade'
 
 dependency 'nanliu/staging', '>= 0.2.0'
+dependency 'puppetlabs/stdlib', '>= 2.5.0'
