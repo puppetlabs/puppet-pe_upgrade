@@ -1,6 +1,19 @@
 CHANGELOG
 =========
 
+1.0.0
+-----
+
+2013-07-10
+
+This is a backwards incompatible feature release. There should be no major
+changes and the vast majority of use cases should be unaffected, but no
+guarantees are made.
+
+  * rspec-puppet test coverage added.
+  * (pe-upgrade-#15) Drop dependency on lsb facts
+  * Drop dependency on hiera, require nanliu/staging >= 0.2.0
+
 0.4.2
 -----
 
