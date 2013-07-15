@@ -3,6 +3,8 @@ Puppet Enterprise Upgrade Module
 
 This module will upgrade Puppet Enterprise.
 
+Travis Test status: [![Build Status](https://travis-ci.org/puppetlabs/puppet-pe_upgrade)](https://travis-ci.org/puppetlabs/puppet-pe_upgrade)
+
 Usage
 -----
 
