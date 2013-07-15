@@ -1,5 +1,16 @@
-Puppet Enterprise Upgrade Module
-================================
+#Puppet Enterprise Upgrade Module
+
+## WARNING: This module has recently moved to puppetlabs.
+
+This is warning that the adrianthebo namespace version of pe\_upgrade is being
+deprecated in favor of the puppetlabs version.  We will be working to retire
+his forge version in favor of this one.  If you previously used the git repo at:
+
+* https://github.com/adrienthebo/puppet-pe\_upgrade/
+
+You will need to update your remotes and file PRs against the puppetlabs/ one.
+
+##Description
 
 This module will upgrade Puppet Enterprise.
 
