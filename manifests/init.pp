@@ -100,7 +100,7 @@ class pe_upgrade(
     if $verbose {
       notify { "Upgrade status":
         loglevel => info,
-        message  => "Current PE version '${pe_version}' at desired version '${version}'; not managing upgrade resources",
+        message  => "Current PE version '${::pe_version}' at desired version '${version}'; not managing upgrade resources",
       }
     }
   }

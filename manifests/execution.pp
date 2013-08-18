@@ -1,4 +1,4 @@
-class pe_upgrade::execution(
+class pe_upgrade::execution (
   $certname,
   $installer,
   $version,
@@ -8,22 +8,30 @@ class pe_upgrade::execution(
   $server,
   $staging_root,
   $timeout,
-  $answersfile,
-) {
+  $answersfile,) {
 
-  $bin = $mode ? {
-    'install' => 'puppet-enterprise-installer',
-    default   => 'puppet-enterprise-upgrader',
+  # Fix issue #23 PE3 only ships with puppet-enterprise-installer
+  $result = versioncmp($version, '3.0.0')
+  if $result >= 0 {
+    $bin = 'puppet-enterprise-installer'
+  } else {
+    $bin = $mode ? {
+      'install' => 'puppet-enterprise-installer',
+      default   => 'puppet-enterprise-upgrader',
+    } }
+
+  if $logfile {
+    $log_directive = "-l ${logfile}"
+  } else {
+    $log_directive = ""
   }
-
-  if $logfile { $log_directive = "-l ${logfile}" }
-  else        { $log_directive = "" }
 
   $answersfile_dest = "${staging_root}/answers.txt"
 
-  $cmd = regsubst("${staging_root}/${installer}/${bin}", ':version', $version, 'G')
+  $cmd = regsubst("${staging_root}/${installer}/${bin}", ':version', $version, 'G'
+  )
   $validate_cmd = "${cmd} -n -a ${answersfile_dest}"
-  $run_cmd      = "${cmd} ${log_directive} -a ${answersfile_dest}"
+  $run_cmd = "${cmd} ${log_directive} -a ${answersfile_dest}"
 
   $exec_paths = [
     '/usr/bin',
@@ -31,8 +39,7 @@ class pe_upgrade::execution(
     '/usr/local/bin',
     '/usr/sbin',
     '/sbin',
-    '/usr/local/sbin'
-  ]
+    '/usr/local/sbin']
 
   file { $answersfile_dest:
     ensure  => present,
@@ -41,7 +48,7 @@ class pe_upgrade::execution(
     group   => 0,
   }
 
-  #exec { 'Validate answers':
+  # exec { 'Validate answers':
   #  command   => $validate_cmd,
   #  path      => $exec_paths,
   #  user      => 0,
@@ -73,16 +80,18 @@ class pe_upgrade::execution(
 
     if $migrate_certs {
       file { ['/etc/puppetlabs', '/etc/puppetlabs/puppet']:
-        ensure  => directory,
-        owner   => 0,
-        group   => 0,
-        mode    => '0700',
-        before  => Exec['Run upgrade'],
+        ensure => directory,
+        owner  => 0,
+        group  => 0,
+        mode   => '0700',
+        before => Exec['Run upgrade'],
       }
 
-      # This is done over a recursive file definition because the file definition
+      # This is done over a recursive file definition because the file
+      # definition
       # will display diffs and thus leak sensitive information.
-      exec { '/bin/cp --recursive --force /var/lib/puppet/ssl /etc/puppetlabs/puppet/':
+      exec { '/bin/cp --recursive --force /var/lib/puppet/ssl /etc/puppetlabs/puppet/'
+      :
         user      => 0,
         group     => 0,
         logoutput => on_failure,
