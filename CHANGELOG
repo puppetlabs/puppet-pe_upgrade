@@ -1,6 +1,16 @@
 CHANGELOG
 =========
 
+2.0.0
+-----
+
+2013-09-08
+
+This is a major release to add support for PE3 (and SuSE).
+
+ * Add PE3 support.
+ * Add Suse Support.
+
 1.0.0
 -----
 
