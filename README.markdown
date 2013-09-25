@@ -2,7 +2,7 @@
 
 ## WARNING: This module has recently moved to puppetlabs.
 
-This is warning that the adrianthebo namespace version of pe\_upgrade is being
+This is warning that the adrienthebo namespace version of pe\_upgrade is being
 deprecated in favor of the puppetlabs version.  We will be working to retire
 his forge version in favor of this one.  If you previously used the git repo at:
 
