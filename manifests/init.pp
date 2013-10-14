@@ -82,7 +82,8 @@ class pe_upgrade(
   $allow_downgrade = $pe_upgrade::params::allow_downgrade,
   $upgrade_master  = $pe_upgrade::params::upgrade_master,
   $verbose         = $pe_upgrade::params::verbose,
-  $logfile         = $pe_upgrade::params::logfile,
+  $installer       = $pe_upgrade::params::installer,
+  $logfile         = $pe_upgrade::params::logfile
 ) inherits pe_upgrade::params {
 
   include "::staging"
@@ -98,15 +99,13 @@ class pe_upgrade(
     }
 
     if $verbose {
-      notify { "Upgrade status":
+      notify { 'Upgrade status':
         loglevel => info,
         message  => "Current PE version '${::pe_version}' at desired version '${version}'; not managing upgrade resources",
       }
     }
   }
   else {
-
-    $installer = $::pe_upgrade_installer
 
     anchor { 'pe_upgrade::begin': } ->
     class { 'pe_upgrade::validation':
