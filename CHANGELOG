@@ -1,6 +1,26 @@
 CHANGELOG
 =========
 
+2.1.0
+-----
+
+2013-10-14
+
+The release adds support for the `installer` parameter in the main pe_upgrade
+class.  This allows you to use pe_upgrade as:
+
+```puppet
+  class { 'pe_upgrade':
+    version => '2.5.3',
+    download_dir => 'http://ourdownloads.example.com',
+    installer => 'puppet-enterprise-2.5.3-ubuntu-10.04-amd64',
+  }
+```
+
+In order to upgrade PE on distributions and versions of Puppet Enterprise that
+this module doesn't support.
+
+
 2.0.0
 -----
 
