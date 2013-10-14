@@ -35,4 +35,19 @@ describe 'pe_upgrade::staging', :type => :class do
   on_all_platforms do |platform|
     it_behaves_like 'staging the Puppet Enterprise installer package', platform
   end
+
+  describe 'when installer is set to false' do
+    let(:params) do
+      {
+        'installer'    => false,
+        'version'      => '2.5.3',
+        'download_dir' => 'https://download.dir',
+        'timeout'      => '300',
+        'staging_root' => '/opt/staging/pe_upgrade',
+      }
+    end
+
+    it { expect { fail }.to raise_error }
+  end
+
 end
