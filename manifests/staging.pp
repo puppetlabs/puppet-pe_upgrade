@@ -32,6 +32,10 @@ class pe_upgrade::staging(
 
   include '::staging'
 
+  if $installer == false {
+    fail("No installer provided.  This occurs if the `pe_upgrade_installer` fact wasn't able to resolve.")
+  }
+
   $ext = $::pe_upgrade_extension
   $installer_pkg = regsubst("${installer}.${ext}", ':version', $version, 'G')
   $source_url    = regsubst("${download_dir}/${installer_pkg}", ':version', $version, 'G')
