@@ -105,12 +105,6 @@ See Also
 Please view the documentation in the enclosed manifests specific descriptions
 and usage.
 
-Getting Help
-------------
-
-If you have questions or concerns about this module, contact finch on #puppet
-on Freenode, or email adrien@puppetlabs.com.
-
 Caveats
 -------
 
