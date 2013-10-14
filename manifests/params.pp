@@ -144,4 +144,5 @@ class pe_upgrade::params {
   $verbose         = pe_upgrade_pick($::pe_upgrade_verbose,         false)
   $logfile         = pe_upgrade_pick($::pe_upgrade_logfile,         false)
   $migrate_certs   = pe_upgrade_pick($::pe_upgrade_migrate_certs,   false)
+  $installer       = pe_upgrade_pick($::pe_upgrade_installer,       false)
 }
