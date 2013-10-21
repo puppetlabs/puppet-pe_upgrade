@@ -63,7 +63,7 @@ Deploying the module from Puppet Dashboard
 
 You can use Puppet Dashboard to configure this module. Since Puppet Dashboard
 doesn't directly support parameterized classes, you can use global variables
-to configure the module. See the data.pp class documentation for all respected
+to configure the module. See the params.pp class documentation for all respected
 variables.
 
 ### Puppet Dashboard will show errors on pe_upgrade runs
