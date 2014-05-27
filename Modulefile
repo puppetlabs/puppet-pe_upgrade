@@ -1,5 +1,5 @@
 name    'puppetlabs-pe_upgrade'
-version '2.1.0'
+version '2.1.1'
 author  'Puppet Labs'
 license 'Apache 2.0'
 
