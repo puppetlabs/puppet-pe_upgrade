@@ -27,7 +27,25 @@ describe 'pe_upgrade_distro_version fact' do
       '5.3'   => '5.3',
       '6.1'   => '6.1',
       '7.1'   => '7.1',
-    },
+    }
+  }
+
+  distros.each_pair do |distro, tests|
+    tests.each_pair do |testcase, expected|
+      describe "on #{distro} #{testcase}" do
+        before(:each) do
+          stub_fact :operatingsystem, distro
+          stub_fact :operatingsystemrelease, testcase
+        end
+        it { should == expected }
+      end
+    end
+  end
+
+
+  # Solaris is unique - the kernelrelease fact is used instead of
+  # operatingsystemrelease - so this will stub that out.
+  distros = {
     'Solaris' => {
       '5.10'  => '10',
     }
@@ -38,7 +56,7 @@ describe 'pe_upgrade_distro_version fact' do
       describe "on #{distro} #{testcase}" do
         before(:each) do
           stub_fact :operatingsystem, distro
-          stub_fact :operatingsystemrelease, testcase
+          stub_fact :kernelrelease, testcase
         end
         it { should == expected }
       end
